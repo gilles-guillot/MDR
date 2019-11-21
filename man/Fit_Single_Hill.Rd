@@ -2,7 +2,7 @@
 % Please edit documentation in R/Fit_Single_Hill.R
 \name{Fit_Single_Hill}
 \alias{Fit_Single_Hill}
-\title{Estimate parameters in single-compound dose-reponse models under some of the Hill model families (2,3,4 parameters)}
+\title{Estimate parameters in   Hill model families}
 \usage{
 Fit_Single_Hill(
   x,
@@ -24,9 +24,13 @@ Fit_Single_Hill(
 
 \item{n}{number of binomial samples at various dose values}
 
+\item{models}{one of 2-4 parameter Hill function}
+
 \item{lower}{lower limits for the search of parameter}
 
 \item{upper}{upper limits for the search of parameter}
+
+\item{bootstrap}{logical resampling for estimating parameter variability}
 
 \item{B}{number of bootstrap resampling}
 
@@ -55,6 +59,8 @@ Model selection with leave-"some"-out likelihood cross-validation
 "some" = all obs receiving a certain dose level
 }
 \description{
+Estimate parameters in single-compound dose-reponse models under some of the Hill model families (2,3,4 parameters)
+
 Parameters
 }
 \author{

@@ -5,14 +5,18 @@ Fit_Single_Hill <- function(x,y,n,models=c('Hill2','Hill3','Hill4'),
                             select=FALSE,
                             eps = 1e-15)
 {
+  #' @title  Estimate parameters in   Hill model families
+  #' @description
   #' Estimate parameters in single-compound dose-reponse models under some of the Hill model families (2,3,4 parameters)
   #'
   #' Parameters
   #' @param x sequence of dose input
   #' @param y sequence of responses
   #' @param n number of binomial samples at various dose values
+  #' @param models one of 2-4 parameter Hill function
   #' @param lower lower limits for the search of parameter
   #' @param upper upper limits for the search of parameter
+  #' @param bootstrap logical resampling for estimating parameter variability
   #' @param B number of bootstrap resampling
   #' @param select TRUE/FALSE perform model selection
   #' @param eps used to replace 0's by small numerical values
@@ -39,7 +43,9 @@ Fit_Single_Hill <- function(x,y,n,models=c('Hill2','Hill3','Hill4'),
   #'
   #' @author Gilles Guillot \email{gilles.b.guillot@gmail.com}
   #'
-  require(GenSA)
+  #' @importFrom stats rbinom
+  #' @importFrom GenSA GenSA
+
   llcv = par_hat = ed50_hat = par_boot = ed50_boot = list(Hill2=NA,Hill3=NA,Hill4=NA)
   ## negative log-likelihoods
   nll2 <-function(par,x,y,n)
@@ -78,7 +84,7 @@ Fit_Single_Hill <- function(x,y,n,models=c('Hill2','Hill3','Hill4'),
     ed50_hat$Hill2 = res$par[1]
     if(bootstrap){
       print('Bootstrap Hill2')
-      par2_boot = matrix(nr=B,nc=2)
+      par2_boot = matrix(nrow =B,ncol=2)
       ed50_2_boot = rep(NA,B)
       for(iboot in 1:B){
         print(iboot)
@@ -100,7 +106,7 @@ Fit_Single_Hill <- function(x,y,n,models=c('Hill2','Hill3','Hill4'),
     ed50_hat$Hill3 = res$par[1]
     if(bootstrap){
       print('Bootstrap Hill3')
-      par3_boot = matrix(nr=B,nc=3)
+      par3_boot = matrix(nrow =B,ncol=3)
       ed50_3_boot = rep(NA,B)
       for(iboot in 1:B){
         print(iboot)
@@ -122,7 +128,7 @@ Fit_Single_Hill <- function(x,y,n,models=c('Hill2','Hill3','Hill4'),
     ed50_hat$Hill4 = res$par[1] * ( (res$par[3] - 2*res$par[4]) / res$par[3] )**(1/res$par[2])
     if(bootstrap){
       print('Bootstrap Hill4')
-      par4_boot = matrix(nr=B,nc=4)
+      par4_boot = matrix(nrow =B,ncol=4)
       ed50_4_boot = rep(NA,B)
       for(iboot in 1:B){
         print(iboot)
