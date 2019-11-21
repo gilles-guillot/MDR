@@ -10,4 +10,4 @@ Authors@R:
 Description: Computes Model Deviation Ratio statistic from data and makes stochastic simulations to investigate distribution of MDR under same experimental design as actual data. 
 License: MIT
 Encoding: UTF-8
-LazyData: true
+LazyData: true 
