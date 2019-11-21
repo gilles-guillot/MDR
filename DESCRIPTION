@@ -11,5 +11,7 @@ Description: Computes Model Deviation Ratio statistic from data and makes stocha
 License: MIT
 Encoding: UTF-8
 LazyData: true 
+Imports: GenSA
 URL: https://github.com/gilles-guillot/MDR
 BugReports: https://github.com/gilles-guillot/MDR/issues
+RoxygenNote: 7.0.0.9000
