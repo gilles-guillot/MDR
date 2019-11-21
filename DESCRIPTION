@@ -8,9 +8,9 @@ Authors@R:
            email = "gilles.b.guillot@gmail.com",
            comment = c(ORCID = "0000-0003-0675-8325"))
 Description: Computes Model Deviation Ratio statistic from data and makes stochastic simulations to investigate distribution of MDR under same experimental design as actual data. 
-License: MIT
+License: GPL-3
 Encoding: UTF-8
-LazyData: true 
+LazyData: true  
 Imports: GenSA
 URL: https://github.com/gilles-guillot/MDR
 BugReports: https://github.com/gilles-guillot/MDR/issues
