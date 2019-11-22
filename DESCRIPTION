@@ -12,7 +12,8 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true  
 Imports: GenSA 
-Suggests: drc, mixtox
+Suggests: drc, mixtox, knitr, rmarkdown, ggplot2, gridExtra
 URL: https://github.com/gilles-guillot/MDR
 BugReports: https://github.com/gilles-guillot/MDR/issues
 RoxygenNote: 7.0.0.9000
+VignetteBuilder: knitr

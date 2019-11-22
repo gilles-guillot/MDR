@@ -1,0 +1,226 @@
+---
+title: "The MDR package for dose-response analysis of toxicological and pharmacological mixtures with the model deviation ratio method."
+author:  "Gilles Guillot"
+date: "`r Sys.Date()`"
+# output: rmarkdown::html_vignette
+abstract: We introduce the R package `MDR` with examples. It is a companion package to the article by @MDR_Guillot2019.
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+header-includes:
+   - \usepackage{setspace}
+   - \onehalfspacing
+   - \usepackage{manfnt}
+bibliography: 
+- /home/gilles/Dropbox/com/bibtex/biblio.bib
+- /home/gilles/Dropbox/com/bibtex/gilles.bib 
+vignette: >
+  %\VignetteIndexEntry{Dose-response analysis of mixture data with the model deviation ratio method.}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(MDR)
+library(ggplot2)
+library(gridExtra)
+# library(bookdown)
+```
+
+# Overview
+
+## Loewe additivity 
+
+Let $x_e$  and $y_e$  be doses of compounds 1 and 2 producing in combination an effect $e$. We denote by $X_e$ and $Y_e$ the doses of compounds 1 and 2  required to produce  effect $e$ alone (assuming this conditions uniquely define them, i.e. that the individual dose-response functions are bijective).
+$X_e/Y_e$ quantifies the potency of compound 1  relatively to that of compound 2. 
+
+The quantity $y_e X_e/Y_e$ can be interpreted as the dose  of compound 2 converted into the corresponding dose of compound 1 after accounting for difference in potencies. 
+
+Dose additivity at $ (x_e,y_e)$ is defined as the situation where
+\begin{equation}
+x_e + y_e X_e/Y_e = X_e 
+\end{equation}
+more coveniently written as 
+\begin{equation}
+x_e / X_e +  y_e/Y_e = 1
+\end{equation}
+ 
+ If this conditions holds for any $ (x_e,y_e)$ eliciting effect $e$, then the isobole at level $e$ is a  segment joining the points 
+ $(X_e,0)$ and  $(0,Y_e)$  in the domain $(x,y)$.
+ 
+ If we denote by $f()$, $g()$ and $h(,)$ the dose-response functions  of compound 1, compound 2 and of the mixture respectively, then dose additivity holds when 
+ 
+ \begin{equation} \label{eq:Loewe}
+ \frac{x}{f^{-1}(h(x,y))} + \frac{y}{g^{-1}(h(x,y))} = 1   
+ \end{equation}
+ 
+## Model deviation ratio 
+ 
+In the MDR method, the departure from   Loewe additivity is based on comparing an estimate of the mixture dose eliciting an effect $e$ (typically 50\% max effect) to an estimate of  the mixture dose eliciting the same effect under the Loewe additivity model. It involves the following steps: 
+
+1. Estimate the mixture dose eliciting  effect $e$ 
+
+2. Estimate the  mixture dose  that would elicit effect $e$ if Loewe additivity was holding
+
+3. Compute model deviation ratio of  previous quantities
+
+
+# Fitting single-variable dose response curves 
+
+# Defining and computing the MDR for various experimental designs 
+
+
+## Ray design and factorial design
+
+
+
+
+
+```{r design, echo=FALSE,fig.cap="Multiple ray design and full factorial design (top row). Single ray design and single parralel  design.",fig.width=6,fig.height=6}
+d = c(.8,2,6,10,20)
+w = 1
+xy = cbind(w*d,(1-w)*d)
+w = .2
+xy = rbind(xy,cbind(w*d,(1-w)*d))
+w = .5
+xy = rbind(xy,cbind(w*d,(1-w)*d))
+w = .8
+xy = rbind(xy,cbind(w*d,(1-w)*d))
+w = 0
+xy = rbind(xy,cbind(w*d,(1-w)*d))
+xy = rbind(rep(1e-5,2),xy)
+
+colnames(xy) = c('x','y')
+xy = as.data.frame(xy)
+p1 <- ggplot(xy,aes(x,y)) + geom_point(col="steelblue", size=3) +
+  geom_abline(slope=0,intercept=0,col='firebrick2',linetype='solid') +
+  geom_abline(slope=(1-.2)/.2,intercept=0,col='firebrick2',linetype='solid') +
+  geom_abline(slope=(1-.5)/.5,intercept=0,col='firebrick2',linetype='solid') +
+  geom_abline(slope=(1-.8)/.8,intercept=0,col='firebrick2',linetype='solid')  +
+  geom_vline(xintercept=0,col='firebrick2',linetype='solid') +
+  xlab('') +  ylab('Dose compound 2') +
+  theme(axis.text.x = element_blank(), axis.text.y = element_blank())
+
+d = c(.8,2,6,10,20)
+w = 1
+xy = cbind(w*d,(1-w)*d)
+w = .8
+xy = rbind(xy,cbind(w*d,(1-w)*d))
+w = 0
+xy = rbind(xy,cbind(w*d,(1-w)*d))
+xy = rbind(rep(1e-5,2),xy)
+colnames(xy) = c('x','y')
+xy = as.data.frame(xy)
+p3 <- ggplot(xy,aes(x,y)) + geom_point(col="steelblue", size=3) +
+  geom_abline(slope=0,intercept=0,col='firebrick2',linetype='solid') +
+  geom_abline(slope=(1-.8)/.8,intercept=0,col='firebrick2',linetype='solid') +
+  # geom_abline(slope=(1-.5)/.5,intercept=0,col='firebrick2',linetype='dashed') +
+  # geom_abline(slope=(1-.8)/.8,intercept=0,col='firebrick2',linetype='solid')  +
+  geom_vline(xintercept=0,col='firebrick2',linetype='solid') +
+  xlab('Dose compound 1') +  ylab('Dose compound 2') +
+  theme(axis.text.x = element_blank(), axis.text.y = element_blank())
+
+d1 = c(0,.8,2,6,10,20)
+d2 = c(0,.5,1.5,5,12,20)
+x = rep(d1,6)
+y = rep(d2,each=6)
+xy = cbind(x,y)
+xy = as.data.frame(xy)
+colnames(xy) = c('x','y')
+
+p2 <- ggplot(xy,aes(x,y)) + geom_point(col="steelblue", size=3) +
+  geom_abline(slope=0,intercept=0,col='firebrick2',linetype='solid') +
+  geom_vline(xintercept=d1,col='firebrick2',linetype='solid') +
+  geom_hline(yintercept=d2,col='firebrick2',linetype='solid') +
+  geom_vline(xintercept=0,col='firebrick2',linetype='solid')  +
+  xlab('') +  ylab('') +
+  theme(axis.text.x = element_blank(), axis.text.y = element_blank())
+
+d1 = c(0,.8,2,6,10,20)
+d2 = c(0,5)
+x = rep(d1,2)
+y = rep(d2,each=2)
+xy = cbind(x,y)
+xy = rbind(xy,cbind(rep(0,6),c(0,.5,1.5,5,12,20)))
+xy = as.data.frame(xy)
+colnames(xy) = c('x','y')
+
+p4 <- ggplot(xy,aes(x,y)) + geom_point(col="steelblue", size=3) +
+  geom_abline(slope=0,intercept=0,col='firebrick2',linetype='solid') +
+  # geom_vline(xintercept=d1,col='firebrick2',linetype='solid') +
+  geom_hline(yintercept=d2,col='firebrick2',linetype='solid') +
+  geom_vline(xintercept=0,col='firebrick2',linetype='solid')  +
+  xlab('Dose compound 1') +  ylab('') + ylim(0,20) + 
+  theme(axis.text.x = element_blank(), axis.text.y = element_blank())
+
+grid.arrange(p1,p2,p3,p4,nrow=2)
+```
+
+## Single parralel design 
+
+Under this setting, it is assumed that data consist of single compound experiment data for each compound, and mixture experiment data where the dose of one compound (say compound 2) is held fixed while the dose of the other compound varies. 
+We denote by
+
+* $e$ some reference effect (typically 50\% max effect), 
+
+* $X_e$ and $Y_e$ the doses of compounds 1 and 2  required to produce  effect $e$ alone, 
+
+* $y^0$ the dose of compound 2 held fixed while the dose of compound 1 varies, 
+
+* $x^*_e$ the dose of compound 1 eliciting effect $e$ in presence of dose   $y^0$ of compound 2. 
+
+* $x^{DA}_e$ the dose of compound 1 that would elicit effect $e$ in presence of dose   $y^0$ of compound 2 if dose addtivity was holding. 
+
+Then $x^{DA}_e = X_e(1-y^0 / Y_e)$ and 
+$$MDR = \frac{x^{DA}_e}{x^*_e} =  \frac{X_e}{x^*}(1-\frac{y^0}{Y_e})$$
+In the above,  $y^0$ is set by the experimenter while $X_e$, $Y_e$ and $x^*_e$  are estimated from the data with any technique suitable for single-compound dose-response experiment data. 
+
+
+## Single ray design
+Under this setting, it is assumed that data consist of single compound experiment data for each compound, and mixture experiment data where the dose of both compounds varies while the ratio of their doses is held constant.  On such a ray, even though both doses vary, there is only one degree of freedom. This can be re-parameterized for example as $(x_i,y_i)= d_i(w,1-w)$ where $d_i=x_i+y_i$ and $w=x_i/(x_i+y_i)$ 
+
+or  as $(x_i,y_i) = y_i(a,1)$ where  $a=x_i/y_i$.
+
+Using one of those parametrizations make it possible to use methods designed for single compound experiment data. 
+
+###  Parameterization  $d_i(w,1-w)$ 
+
+The dose additivity equation $x_e / X_e +  y_e/Y_e = 1$ can be written 
+
+$$d_e w  / X_e +  d_e(1-w)/Y_e = 1$$
+Denoting by $d^{DA}_e$ the mixture dose that would elicit effect $e$ if DA was holding and by $d_e^*$ the mixture dose estimated to elicit effect $e$, we have:
+$$d^{DA}_e  = \frac{1}{ w/X_e +  (1-w)/Y_e }$$
+and $$MDR =  \frac{1}{ d_e^*(w/X_e +  (1-w)/Y_e) }$$
+
+###  Parameterization  $y_i(a,1)$ 
+Using the parameterization $(x_i,y_i) = y_i(a,1)$, we denote by $y_e^{DA}$ the dose of compound 2 that would elicit effect $e$ in presence of a dose $ay_e^{DA}$ of compound 1 if DA was holding and by  $y_e^*$ the dose of compound 2 estimated to elicit 
+effect $e$  in presence of a dose $ay_e^{DA}$ of compound 1. 
+
+
+The DA equation $x_e / X_e +  y_e/Y_e = 1$ is rewritten as 
+$$a y_e  / X_e +  y_e/Y_e = 1$$ 
+hence 
+$$y_e^{DA} = \frac{1}{a/X_e + 1/Y_e}$$
+and $$MDR =  \frac{1}{y_e^*(a/X_e + 1/Y_e)}$$
+
+# Testing Loewe additivity with the MDR statistic 
+
+
+# Examples 
+
+## Analysis of simulated data
+
+## Re-analysis of data of @dalla2014sensitivity
+
+
+# References 
+
+
