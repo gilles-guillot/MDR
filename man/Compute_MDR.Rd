@@ -40,7 +40,7 @@ Each of the design above has to contain single-compound experiment data}
 \item{do.plot}{logical}
 }
 \value{
-estimates of doses or concentrations eliciting 50% max effect and MDR
+estimates of doses or concentrations eliciting 50\% max effect and of MDR
 }
 \description{
 computing Model Deviation Ratio for data obtained under three types of designs

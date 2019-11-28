@@ -7,6 +7,7 @@ date: "`r Sys.Date()`"
 abstract: We introduce the R package MDR with examples. It is a companion package to the article by @MDR_Guillot2019.
 output:
   rmarkdown::html_vignette:
+  #pdf_document:
     toc: true
     toc_depth: 2
 header-includes:
