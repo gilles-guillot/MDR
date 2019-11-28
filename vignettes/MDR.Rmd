@@ -1,9 +1,10 @@
 ---
-title: "The MDR package for dose-response analysis of toxicological and pharmacological mixtures with the model deviation ratio method."
-author:  "Gilles Guillot"
+title: The R package MDR
+subtitle: Dose-response analysis of toxicological and pharmacological mixtures with the model deviation ratio method.
+author: Gilles Guillot
 date: "`r Sys.Date()`"
 # output: rmarkdown::html_vignette
-abstract: We introduce the R package `MDR` with examples. It is a companion package to the article by @MDR_Guillot2019.
+abstract: We introduce the R package MDR with examples. It is a companion package to the article by @MDR_Guillot2019.
 output:
   rmarkdown::html_vignette:
     toc: true
@@ -185,22 +186,28 @@ In the above,  $y^0$ is set by the experimenter while $X_e$, $Y_e$ and $x^*_e$  
 
 
 ## Single ray design
-Under this setting, it is assumed that data consist of single compound experiment data for each compound, and mixture experiment data where the dose of both compounds varies while the ratio of their doses is held constant.  On such a ray, even though both doses vary, there is only one degree of freedom. This can be re-parameterized for example as $(x_i,y_i)= d_i(w,1-w)$ where $d_i=x_i+y_i$ and $w=x_i/(x_i+y_i)$ 
+Under this setting, it is assumed that data consist of single compound experiment data for each compound, and mixture experiment data where the dose of both compounds varies while the ratio of their doses is held constant.  On such a ray, even though both doses vary, there is only one dimension or degree of freedom. To account for this fact, it is convenient to re-parameterize $(x_i,y_i)$ into 
 
-or  as $(x_i,y_i) = y_i(a,1)$ where  $a=x_i/y_i$.
+1. $(x_i,y_i)= d_i(w,1-w)$ where $d_i=x_i+y_i$ and $w=x_i/(x_i+y_i)$ 
+
+or  
+
+2. $(x_i,y_i) = y_i(a,1)$ where  $a=x_i/y_i$.
 
 Using one of those parametrizations make it possible to use methods designed for single compound experiment data. 
 
-###  Parameterization  $d_i(w,1-w)$ 
+###  Parameterization 1
 
-The dose additivity equation $x_e / X_e +  y_e/Y_e = 1$ can be written 
+Using the parameterization $(x_i,y_i)=d_i(w,1-w)$, the dose additivity equation $x_e / X_e +  y_e/Y_e = 1$ can be written 
 
 $$d_e w  / X_e +  d_e(1-w)/Y_e = 1$$
 Denoting by $d^{DA}_e$ the mixture dose that would elicit effect $e$ if DA was holding and by $d_e^*$ the mixture dose estimated to elicit effect $e$, we have:
 $$d^{DA}_e  = \frac{1}{ w/X_e +  (1-w)/Y_e }$$
 and $$MDR =  \frac{1}{ d_e^*(w/X_e +  (1-w)/Y_e) }$$
 
-###  Parameterization  $y_i(a,1)$ 
+###  Parameterization  2
+
+
 Using the parameterization $(x_i,y_i) = y_i(a,1)$, we denote by $y_e^{DA}$ the dose of compound 2 that would elicit effect $e$ in presence of a dose $ay_e^{DA}$ of compound 1 if DA was holding and by  $y_e^*$ the dose of compound 2 estimated to elicit 
 effect $e$  in presence of a dose $ay_e^{DA}$ of compound 1. 
 

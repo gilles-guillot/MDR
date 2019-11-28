@@ -31,8 +31,6 @@ Sim_Mixture(
 \item{distribution}{distribution of response conditional on Hill function value}
 
 \item{par_dist}{param of the previous distribution}
-
-\item{z}{sequence of responses}
 }
 \value{
 list with input parameters and simulated responses

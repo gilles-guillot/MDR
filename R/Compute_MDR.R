@@ -6,7 +6,7 @@ Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
 {
   #' @title Compute MDR
   #' @description computing Model Deviation Ratio for data obtained under three types of designs
- #' @param x sequence of doses first compound
+  #' @param x sequence of doses first compound
   #' @param y sequence of doses second compound
   #' @param z sequence of responses
   #' @param n number of binomial samples at various dose values
@@ -20,7 +20,7 @@ Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
   #' @param lower lower limits for the search of parameter
   #' @param upper upper limits for the search of parameter
   #'
-  #' @return estimates of doses or concentrations eliciting 50% max effect and MDR
+  #' @return estimates of doses or concentrations eliciting 50\% max effect and of MDR
   #'
   #' @importFrom graphics  abline lines plot
 

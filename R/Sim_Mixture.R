@@ -4,7 +4,6 @@
 #'
 #' @param x sequence of doses first compound
 #' @param y sequence of doses second compound
-#' @param z sequence of responses
 #' @param n number of binomial samples at various dose values
 #' @param par_Hill parameters of the Hill function
 #' @param interaction_model 'Loewe','Bliss','Hewlett','Voelund' or 'JonkerSA'
@@ -14,7 +13,7 @@
 #'
 #' @return list with input parameters and simulated responses
 #'
-#' @importFrom stats rlnorm
+#' @importFrom stats rlnorm uniroot
 Sim_Mixture <- function(x,y,n,par_Hill,interaction_model,par_int=NULL,distribution,par_dist=1)
 {
   if(!(distribution %in% c('binom','lnorm'))) stop('distribution not recognized')
@@ -32,12 +31,12 @@ Sim_Mixture <- function(x,y,n,par_Hill,interaction_model,par_int=NULL,distributi
     if(x[i]==0 & y[i]!=0){ h[i] = Hill(x=y[i],a=a2,b=b2,c=1,d=0) }
     if(x[i]!=0 & y[i]!=0)
     {
-      if(interaction_model == 'Loewe')
-        { h[i] = DR_Loewe_Hill2(d1=x[i],d2=y[i],a1=a1,b1=b1,a2=a2,b2=b2) }
       if(interaction_model == 'Bliss')
-        { h[i] = DR_Bliss_Hill2(d1=x[i],d2=y[i],a1=a1,b1=b1,a2=a2,b2=b2) }
+      { h[i] = DR_Bliss_Hill2(d1=x[i],d2=y[i],a1=a1,b1=b1,a2=a2,b2=b2) }
+      if(interaction_model == 'Loewe')
+        { h[i] = DR_Voelund_Hill2(d1=x[i],d2=y[i],a1=a1,b1=b1,a2=a2,b2=b2,lambda1=1,lambda2=1) }
       if(interaction_model == 'Hewlett')
-        { h[i] = DR_Hewlett_Hill2(d1=x[i],d2=y[i],a1=a1,b1=b1,a2=a2,b2=b2,lambda=par_int[1]) }
+        { h[i] = DR_Voelund_Hill2(d1=x[i],d2=y[i],a1=a1,b1=b1,a2=a2,b2=b2,lambda1=par_int[1],lambda2=par_int[1]) }
       if(interaction_model == 'Voelund')
         { h[i] = DR_Voelund_Hill2(d1=x[i],d2=y[i],a1=a1,b1=b1,a2=a2,b2=b2,
                                                                    lambda1=par_int[1],lambda2=par_int[2]) }
