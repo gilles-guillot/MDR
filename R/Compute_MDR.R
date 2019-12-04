@@ -12,17 +12,16 @@ Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
   #' @param n number of binomial samples at various dose values
   #' @param models family of the single compound dose-response curve
   #' @param design any of the three below
-  #' 'single-parallel': single ray parallel to an axis (dose of one of the two compounds is fixed), single compound experiment data not used,
+   #' 'single-parallel': single ray parallel to an axis (dose of one of the two compounds is fixed), single compound experiment data not used,
   #' 'single-ray': single ray design (ratio of doses of two compounds is fixed), single compound experiment data not used
   #' TODO 'general': fully arbitrary design, all data used including  single compound experiment data
   #' Each of the design above has to contain single-compound experiment data
   #' @param do.plot logical
   #' @param lower lower limits for the search of parameter
   #' @param upper upper limits for the search of parameter
-  #'
-  #' @return estimates of doses or concentrations eliciting 50\% max effect and of MDR
-  #'
+  #' @return estimates of doses or concentrations eliciting 50\% max effect and of MDR defined as d50_DA / d50_obs
   #' @importFrom graphics  abline lines plot
+  #' @export
 
   if(! (design %in% c('single-parallel','single-ray','general'))) stop('design not recognized')
 
@@ -121,10 +120,11 @@ Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
     MDR =  d50_DA / d50_obs
 
   }
-  ## res = list(X50_hat=X50_hat, Y50_hat=Y50_hat, d50_DA=d50_DA, d50_obs = d50_obs, MDR = MDR)
-  res <- c(X50_hat, Y50_hat, d50_DA, d50_obs, MDR)
-  names(res) <-  c('X50_hat', 'Y50_hat', 'd50_DA', 'd50_obs', 'MDR')
-
+  res <- list(X50_hat=X50_hat,
+              Y50_hat=Y50_hat,
+              d50_DA=d50_DA,
+              d50_obs=d50_obs,
+              MDR=MDR)
   return(res)
 }
 

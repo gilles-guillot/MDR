@@ -21,9 +21,6 @@ DR_Bliss_Hill2(d1, d2, a1, b1, a2, b2)
 }
 \value{
 vector of numerical responses
-Bivariate DR function when each mixture follows
-a Binomial regression and Bliss independance  holds
-with inverse log logistic link
 }
 \description{
 Compute bivariate dose-response function when each mixture compoent follows a 2-parameter Hill dose-response function and the Bliis independance  model holds.

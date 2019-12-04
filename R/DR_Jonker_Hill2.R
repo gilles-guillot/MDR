@@ -9,7 +9,7 @@
 #' @param b2 parameter b Hill-2 DR fuction in 1/(1+(a/x)**b) for second compound
 #' @param alpha parameter quantifying departure from Loewe additivity in Jonker S/A model
 #' @return vector of numerical responses
-
+#' @export
 DR_JonkerSA_Hill2 <- function(d1,d2,a1,b1,a2,b2,alpha)
 {
   phi = function(E,d1,d2,a1,b1,a2,b2,alpha) {

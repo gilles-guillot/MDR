@@ -8,6 +8,7 @@
 #' @param d d in d + (c-d)/(1+(a/x)**b)
 #'
 #' @return response
+#' @export
 Hill <- function(x,a,b,c=1,d=0)
 {
   d + (c-d)/(1+(a/x)**b)

@@ -12,7 +12,7 @@
 #' @param lambda2 parameter Voelund model
 #'
 #' @return response: a single numerical value
-
+#' @export
 DR_Voelund_Hill2 <- function(d1,d2,a1,b1,a2,b2,lambda1,lambda2)
 {
   phi = function(E,d1,d2,a1,b1,a2,b2,lambda1,lambda2)

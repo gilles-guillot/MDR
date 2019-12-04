@@ -195,7 +195,7 @@ or
 
 2. $(x_i,y_i) = y_i(a,1)$ where  $a=x_i/y_i$.
 
-Using one of those parametrizations make it possible to use methods designed for single compound experiment data. 
+Using one of those parametrizations makes it possible to use methods designed for single compound experiment data. 
 
 ###  Parameterization 1
 
@@ -226,6 +226,41 @@ and $$MDR =  \frac{1}{y_e^*(a/X_e + 1/Y_e)}$$
 
 ## Analysis of simulated data
 
+```{r simdata}
+library(MDR)
+
+a1 = 5 ; b1 = .3  # parameters Hill DR function for compound 1
+a2 = 7 ; b2 = .7  # parameters Hill DR function for compound 2
+#
+d =  c(0,.4,.8,1.5,3,6,12,20) 
+w = 1
+xy = cbind(w*d,(1-w)*d)
+w = 0
+xy = rbind(xy,cbind(w*d,(1-w)*d))
+w = .7
+xy = rbind(xy,cbind(w*d,(1-w)*d))
+#
+x = xy[,1]
+y = xy[,2]
+n = rep(36,length(x))
+
+simdat1 = Sim_Mixture(x=x,y=y,n=n,
+                  par_Hill=c(a1,b1,a2,b2),
+                  interaction_model='Loewe',
+                  par_int=NULL,
+                  distribution='binom')
+str(simdat1)   
+res_mdr = Compute_MDR(x=simdat1$x,
+            y=simdat1$y,
+            z=simdat1$z,
+            n=simdat1$n,
+            models=c('Hill2'),
+            design='single-ray',
+            lower = c(0.0001,0.0001,0.0001,0.0001) ,
+            upper = c(10,10,1,1) ,
+            do.plot=FALSE )
+str(res_mdr)
+```
 ## Re-analysis of data of @dalla2014sensitivity
 
 

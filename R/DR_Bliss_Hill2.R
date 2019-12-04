@@ -9,7 +9,7 @@
 #' @param b2 parameter b Hill-2 DR fuction in 1/(1+(a/x)**b) for second compound
 #'
 #' @return vector of numerical responses
-
+#' @export
 DR_Bliss_Hill2 <- function(d1,d2,a1,b1,a2,b2)
 {
   #' Bivariate DR function when each mixture follows

@@ -2,10 +2,15 @@
 #' @title Simulate toxicological/pharmacological mixture experiment data
 #' @description Simulate toxicological/pharmacological mixture experiment data
 #'
-#' @param x sequence of doses first compound
-#' @param y sequence of doses second compound
+#' @param x sequence of doses first compound. May contaon zeroes
+#' @param y sequence of doses second compound. May contaon zeroes
 #' @param n number of binomial samples at various dose values
-#' @param par_Hill parameters of the Hill function
+#' @param par_Hill parameters of the Hill functions.
+#' If par_Hill = (a1,a2,b1,b2)
+#' a1 is a in 1/(1+(a/x)**b) for first compound
+#' b1 is b in  1/(1+(a/x)**b) for first compound
+#' a2 is a in  1/(1+(a/x)**b) for second compound
+#' b2 is b in 1/(1+(a/x)**b) for second compound
 #' @param interaction_model 'Loewe','Bliss','Hewlett','Voelund' or 'JonkerSA'
 #' @param par_int parameter for interaction model
 #' @param distribution distribution of response conditional on Hill function value
@@ -14,6 +19,7 @@
 #' @return list with input parameters and simulated responses
 #'
 #' @importFrom stats rlnorm uniroot
+#' @export
 Sim_Mixture <- function(x,y,n,par_Hill,interaction_model,par_int=NULL,distribution,par_dist=1)
 {
   if(!(distribution %in% c('binom','lnorm'))) stop('distribution not recognized')
@@ -52,6 +58,11 @@ Sim_Mixture <- function(x,y,n,par_Hill,interaction_model,par_int=NULL,distributi
     z = rlnorm(n= length(x), meanlog = h, sdlog= sdlog)
     }
 
-  return(list(x=x,y=y,n=n,h=h,z=z,par_Hill,interaction_model,par_int,distribution,par_dist))
+  return(list(x=x,y=y,n=n,h=h,z=z,
+              par_Hill=par_Hill,
+              interaction_model=interaction_model,
+              par_int=par_int,
+              distribution=distribution,
+              par_dist=par_dist))
 
 }

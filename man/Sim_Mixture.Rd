@@ -16,13 +16,18 @@ Sim_Mixture(
 )
 }
 \arguments{
-\item{x}{sequence of doses first compound}
+\item{x}{sequence of doses first compound. May contaon zeroes}
 
-\item{y}{sequence of doses second compound}
+\item{y}{sequence of doses second compound. May contaon zeroes}
 
 \item{n}{number of binomial samples at various dose values}
 
-\item{par_Hill}{parameters of the Hill function}
+\item{par_Hill}{parameters of the Hill functions.
+If par_Hill = (a1,a2,b1,b2)
+a1 is a in 1/(1+(a/x)**b) for first compound
+b1 is b in  1/(1+(a/x)**b) for first compound
+a2 is a in  1/(1+(a/x)**b) for second compound
+b2 is b in 1/(1+(a/x)**b) for second compound}
 
 \item{interaction_model}{'Loewe','Bliss','Hewlett','Voelund' or 'JonkerSA'}
 
