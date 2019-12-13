@@ -10,9 +10,7 @@
 #' @return response
 #' @export
 Hill <- function(x,a,b,c=1,d=0)
-{
-  d + (c-d)/(1+(a/x)**b)
-  }
+{  d + (c-d)/(1+(a/x)**b)  }
 
 
 #' @title reciprocal of 2-paramter Hill function
@@ -24,6 +22,4 @@ Hill <- function(x,a,b,c=1,d=0)
 #'
 #' @return doses elicting effects y
 Hill2_inv <- function(y,a,b)
-{
-  a*(y/(1-y))**(1/b)
-  }
+{  a*(y/(1-y))**(1/b)  }

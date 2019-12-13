@@ -4,10 +4,10 @@ subtitle: Dose-response analysis of toxicological and pharmacological mixtures w
 author: Gilles Guillot
 date: "`r Sys.Date()`"
 # output: rmarkdown::html_vignette
-abstract: We introduce the R package MDR with examples. It is a companion package to the article by @MDR_Guillot2019.
+abstract: We introduce the R package MDR with examples. It provides tools for computing the MDR statistic and assessing the significance of the observed departure from Loewe additivity. It also provide tools for the analysis of single compound dose-response experiment data. It is a companion package to the article by @MDR_Guillot2019.
 output:
-  rmarkdown::html_vignette:
-  #pdf_document:
+  #rmarkdown::html_vignette:
+  pdf_document:
     toc: true
     toc_depth: 2
 header-includes:
@@ -26,7 +26,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  background=col2rgb("cornsilk3"),
+  highlight = TRUE
 )
 ```
 
@@ -76,6 +78,47 @@ In the MDR method, the departure from   Loewe additivity is based on comparing a
 
 
 # Fitting single-variable dose response curves 
+
+The MDR package comes with functions for fitting dose-response curves to single-compound experiment data. The main function is `Fit_Single_Hill` which fits curves from the 2-,3- or 4-parameter Hill family: $$f(x) = d + \frac{c-d}{ ( 1+ (a/x)^b)}$$
+This functions allows users to perform parameter estimation, boostrap compuation to quantify uncertainty attached to parameter estimates and model selection by cross-validation. 
+Its use is illustrated below: 
+
+
+```{r scdr , message=FALSE}
+## Some simulated data are stored in R object of the MDR package named simdat
+## subsetting rows for which y==0
+subs = simdat$y==0
+
+## simplest instance of call to Fit_Single_Hill
+res_scdrx = Fit_Single_Hill(x=simdat$x[subs],
+                            y=simdat$z[subs], ## z contains the response 
+                            n=simdat$n[subs],
+                            SCDR_model='Hill2')
+res_scdrx$par_hat$Hill2
+
+## same with bootstrap for 
+res_scdrx_mock = Fit_Single_Hill(x=simdat$x[subs],
+                            y=simdat$z[subs], ## z contains the response 
+                            n=simdat$n[subs],
+                            SCDR_model='Hill2',
+                            bootstrap = TRUE,
+                            B=5)
+## next lines using res_scdrx pre-computed with B set to 1000
+res_scdrx$par_hat$Hill2
+par(mfrow=c(1,2))
+hist(res_scdrx_boot$par_boot$Hill2[,1],breaks=30,
+     main='Boostrap disitribution',xlab='a')
+abline(v=res_scdrx$par_hat$Hill2[1],col='firebrick3',lwd=2)
+hist(res_scdrx_boot$par_boot$Hill2[,2],breaks=30,
+      main='',xlab='b')
+abline(v=res_scdrx$par_hat$Hill2[2],col='firebrick3',lwd=2)
+
+## fit for 2,3 and 4 param model
+res_scdrx_234 = Fit_Single_Hill(x=simdat$x[subs],
+                            y=simdat$z[subs], ## z contains the response
+                            n=simdat$n[subs],
+                            SCDR_model=c('Hill2','Hill3','Hill4'))
+```
 
 # Defining and computing the MDR for various experimental designs 
 
@@ -222,45 +265,67 @@ and $$MDR =  \frac{1}{y_e^*(a/X_e + 1/Y_e)}$$
 # Testing Loewe additivity with the MDR statistic 
 
 
-# Examples 
+# Examples of estimation of the MDR
 
 ## Analysis of simulated data
 
-```{r simdata}
+
+
+
+```{r comp_mdr}
 library(MDR)
-
-a1 = 5 ; b1 = .3  # parameters Hill DR function for compound 1
-a2 = 7 ; b2 = .7  # parameters Hill DR function for compound 2
-#
-d =  c(0,.4,.8,1.5,3,6,12,20) 
-w = 1
-xy = cbind(w*d,(1-w)*d)
-w = 0
-xy = rbind(xy,cbind(w*d,(1-w)*d))
-w = .7
-xy = rbind(xy,cbind(w*d,(1-w)*d))
-#
-x = xy[,1]
-y = xy[,2]
-n = rep(36,length(x))
-
-simdat1 = Sim_Mixture(x=x,y=y,n=n,
-                  par_Hill=c(a1,b1,a2,b2),
-                  interaction_model='Loewe',
-                  par_int=NULL,
-                  distribution='binom')
-str(simdat1)   
-res_mdr = Compute_MDR(x=simdat1$x,
-            y=simdat1$y,
-            z=simdat1$z,
-            n=simdat1$n,
-            models=c('Hill2'),
+str(simdat)   
+res_mdr = Compute_MDR(x=simdat$x,
+            y=simdat$y,
+            z=simdat$z,
+            n=simdat$n,
+            SCDR_model=c('Hill2'),
             design='single-ray',
             lower = c(0.0001,0.0001,0.0001,0.0001) ,
             upper = c(10,10,1,1) ,
             do.plot=FALSE )
-str(res_mdr)
+res_mdr$X50_hat # EC50 for first compound
+res_mdr$Y50_hat # EC50 for second compound
+res_mdr$d50_DA # EC50 for mixture predicted by Loewe additivity equation
+## (cf vignette for details)
+res_mdr$d50_obs # EC50 for mixture estimated from data 
+res_mdr$MDR ## res_mdr$d50_DA/res_mdr$d50_obs
+
+## mock call to Resample_MDR with  n_resamp=3
+##  n_resamp should be set to 200 at least 
+res_resamp_mock = Resample_MDR(x=simdat$x,y=simdat$y,
+             z=simdat$z,n=simdat$n,
+             SCDR_model='Hill2',
+             par_Hill=NULL,
+             design='single-ray',
+             lower = c(0.0001,0.0001,0.0001,0.0001) ,
+             upper = c(10,10,1,1) ,
+             n_resamp=3, 
+             distribution='binom')
+
+
+## lines below using pre-computed output of Resample_MDR
+## coming as object res_resamp in MDR package
+## with n_resamp=1000
+
+## alpha/2 and 1-alpha/2 quantiles 
+quantile(res_resamp$MDR_resamp,p=c(0.025,0.975))
+res_mdr$MDR
+
+## p-value for observed MDR
+cdf_mdr = ecdf(res_resamp$MDR_resamp)
+pval = ifelse(res_mdr$MDR > median(res_resamp$MDR_resamp),
+              2*(1-cdf_mdr(res_mdr$MDR)),
+              2*cdf_mdr(res_mdr$MDR))
+pval
 ```
+
+
+
+```{r resamp}
+```
+
+
 ## Re-analysis of data of @dalla2014sensitivity
 
 

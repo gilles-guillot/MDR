@@ -8,6 +8,7 @@ Sim_Mixture(
   x,
   y,
   n,
+  SCDR_model = "Hill2",
   par_Hill,
   interaction_model,
   par_int = NULL,
@@ -22,8 +23,10 @@ Sim_Mixture(
 
 \item{n}{number of binomial samples at various dose values}
 
+\item{SCDR_model}{family of the single compound dose-response curve}
+
 \item{par_Hill}{parameters of the Hill functions.
-If par_Hill = (a1,a2,b1,b2)
+If par_Hill = (a1,b1,a2, b2)
 a1 is a in 1/(1+(a/x)**b) for first compound
 b1 is b in  1/(1+(a/x)**b) for first compound
 a2 is a in  1/(1+(a/x)**b) for second compound

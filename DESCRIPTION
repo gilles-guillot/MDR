@@ -1,6 +1,6 @@
 Package: MDR
 Title: Test Loewe additivity with Model Deviation Ratio
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "Gilles",
            family = "Guillot",

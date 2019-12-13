@@ -5,8 +5,9 @@
 #' @param x sequence of doses first compound. May contaon zeroes
 #' @param y sequence of doses second compound. May contaon zeroes
 #' @param n number of binomial samples at various dose values
+#' @param SCDR_model family of the single compound dose-response curve
 #' @param par_Hill parameters of the Hill functions.
-#' If par_Hill = (a1,a2,b1,b2)
+#' If par_Hill = (a1,b1,a2, b2)
 #' a1 is a in 1/(1+(a/x)**b) for first compound
 #' b1 is b in  1/(1+(a/x)**b) for first compound
 #' a2 is a in  1/(1+(a/x)**b) for second compound
@@ -20,7 +21,11 @@
 #'
 #' @importFrom stats rlnorm uniroot
 #' @export
-Sim_Mixture <- function(x,y,n,par_Hill,interaction_model,par_int=NULL,distribution,par_dist=1)
+Sim_Mixture <- function(x,y,n,
+                        SCDR_model='Hill2',
+                        par_Hill,
+                        interaction_model,
+                        par_int=NULL,distribution,par_dist=1)
 {
   if(!(distribution %in% c('binom','lnorm'))) stop('distribution not recognized')
   if(!(interaction_model %in% c('Loewe','Bliss','Hewlett','Voelund','JonkerSA'))) stop('interaction model not recognized')

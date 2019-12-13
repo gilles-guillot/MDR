@@ -1,8 +1,9 @@
-Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
-                lower = c(0.0001,0.0001,0.0001,0.0001) ,
-                upper = c(10,10,1,1) ,
-                do.plot=FALSE # plot fit of DR curve for the two-compound data
-                )
+Compute_MDR <- function(x,y,z,n,
+                        SCDR_model=c('Hill2'),design,
+                        lower = c(0.0001,0.0001,0.0001,0.0001) ,
+                        upper = c(10,10,1,1) ,
+                        do.plot=FALSE # plot fit of DR curve for the two-compound data
+)
 {
   #' @title Compute MDR
   #' @description computing Model Deviation Ratio for data obtained under three types of designs
@@ -10,9 +11,9 @@ Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
   #' @param y sequence of doses second compound
   #' @param z sequence of responses
   #' @param n number of binomial samples at various dose values
-  #' @param models family of the single compound dose-response curve
-  #' @param design any of the three below
-   #' 'single-parallel': single ray parallel to an axis (dose of one of the two compounds is fixed), single compound experiment data not used,
+  #' @param SCDR_model family of the single compound dose-response curve
+  #' @param design any of the below
+  #' 'single-parallel': single ray parallel to an axis (dose of one of the two compounds is fixed), single compound experiment data not used,
   #' 'single-ray': single ray design (ratio of doses of two compounds is fixed), single compound experiment data not used
   #' TODO 'general': fully arbitrary design, all data used including  single compound experiment data
   #' Each of the design above has to contain single-compound experiment data
@@ -29,7 +30,7 @@ Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
   {
     ## compound 1 alone
     subs <- y==0
-    res = Fit_Single_Hill(x=x[subs],y=z[subs],n=n[subs],models=c('Hill2'),
+    res = Fit_Single_Hill(x=x[subs],y=z[subs],n=n[subs],SCDR_model=SCDR_model,
                           lower = lower,
                           upper = upper ,
                           bootstrap=FALSE, B=10,
@@ -37,7 +38,7 @@ Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
     X50_hat = res$ed50_hat$Hill2
     ## compound 2 alone
     subs <- x==0
-    res = Fit_Single_Hill(x=y[subs],y=z[subs],n=n[subs],models=c('Hill2'),
+    res = Fit_Single_Hill(x=y[subs],y=z[subs],n=n[subs],SCDR_model=SCDR_model,
                          lower  = lower ,
                           upper = upper ,
                           bootstrap=FALSE, B=10,
@@ -72,7 +73,7 @@ Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
         d <- y[subs]
         ntmp <- n[subs]
       }
-      res = Fit_Single_Hill(x=d,y=z[subs],n=n[subs],models=c('Hill2'),
+      res = Fit_Single_Hill(x=d,y=z[subs],n=n[subs],SCDR_model=SCDR_model,
                            lower  = lower ,
                             upper = upper ,
                             bootstrap=FALSE, B=10,
@@ -101,7 +102,7 @@ Compute_MDR <- function(x,y,z,n,models=c('Hill2'),design,
       a = mean(unique(xtmp[ss]/ytmp[ss]))
       ## d50_DA: dose x in combination with y=x/a eliciting 50% effect under DA
       d50_DA = 1/(1/X50_hat + 1/(a*Y50_hat))
-      res = Fit_Single_Hill(x=xtmp,y=ztmp,n=ntmp,models=c('Hill2'),
+      res = Fit_Single_Hill(x=xtmp,y=ztmp,n=ntmp,SCDR_model=SCDR_model,
                            lower  = lower ,
                             upper = upper ,
                             bootstrap=FALSE, B=10,

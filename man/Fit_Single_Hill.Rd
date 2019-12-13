@@ -8,7 +8,7 @@ Fit_Single_Hill(
   x,
   y,
   n,
-  models = c("Hill2", "Hill3", "Hill4"),
+  SCDR_model = c("Hill2", "Hill3", "Hill4"),
   lower = c(1e-04, 1e-04, 1e-04, 1e-04),
   upper = c(10, 10, 1, 1),
   bootstrap = FALSE,
@@ -24,7 +24,7 @@ Fit_Single_Hill(
 
 \item{n}{number of binomial samples at various dose values}
 
-\item{models}{one of 2-4 parameter Hill function}
+\item{SCDR_model}{one of 2-4 parameter Hill function}
 
 \item{lower}{lower limits for the search of parameter}
 

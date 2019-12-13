@@ -9,7 +9,7 @@ Compute_MDR(
   y,
   z,
   n,
-  models = c("Hill2"),
+  SCDR_model = c("Hill2"),
   design,
   lower = c(1e-04, 1e-04, 1e-04, 1e-04),
   upper = c(10, 10, 1, 1),
@@ -25,9 +25,9 @@ Compute_MDR(
 
 \item{n}{number of binomial samples at various dose values}
 
-\item{models}{family of the single compound dose-response curve}
+\item{SCDR_model}{family of the single compound dose-response curve}
 
-\item{design}{any of the three below
+\item{design}{any of the below
 'single-parallel': single ray parallel to an axis (dose of one of the two compounds is fixed), single compound experiment data not used,
 'single-ray': single ray design (ratio of doses of two compounds is fixed), single compound experiment data not used
 TODO 'general': fully arbitrary design, all data used including  single compound experiment data
@@ -40,7 +40,7 @@ Each of the design above has to contain single-compound experiment data}
 \item{do.plot}{logical}
 }
 \value{
-estimates of doses or concentrations eliciting 50\% max effect and of MDR
+estimates of doses or concentrations eliciting 50\% max effect and of MDR defined as d50_DA / d50_obs
 }
 \description{
 computing Model Deviation Ratio for data obtained under three types of designs

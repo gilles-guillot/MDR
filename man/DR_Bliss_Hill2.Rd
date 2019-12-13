@@ -17,7 +17,7 @@ DR_Bliss_Hill2(d1, d2, a1, b1, a2, b2)
 
 \item{a2}{parameter a in Hill-2 DR fuction 1/(1+(a/x)**b) for second compound}
 
-\item{b2}{parameter b Hill-2 DR fuction in 1/(1+(a/x)**b) for second compound}
+\item{b2}{parameter b Hill-2 DR fuction in 1/(1+(a/x)**b) for second compound#'}
 }
 \value{
 vector of numerical responses
