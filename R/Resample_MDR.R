@@ -71,8 +71,8 @@ Resample_MDR <- function(x,y,z=NULL,n,
                           z=simdat$z,n=simdat$n,
                           SCDR_model=SCDR_model,
                           design=design,
-                          lower = c(0.0001,0.0001,0.0001,0.0001) ,
-                          upper = c(10,10,1,1) ,
+                          lower = lower ,
+                          upper = upper ,
                           do.plot=FALSE )
     MDR_resamp[isamp] = res_MDR$MDR
   }

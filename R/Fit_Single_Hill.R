@@ -79,7 +79,7 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
   ## Estimation
   if('Hill2' %in% SCDR_model){
     ## Estimation Hill2
-    print('Estimation Hill2')
+    ## print('Estimation Hill2')
     res = GenSA(c(1,1),fn=nll2,lower=lower[1:2],upper=upper[1:2],x=x,y=y,n=n)
     par_hat$Hill2 = res$par[1:2]
     ed50_hat$Hill2 = res$par[1]
@@ -102,7 +102,7 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
   }
   if('Hill3' %in% SCDR_model){
     ## Estimation Hill3
-    print('Estimation Hill3')
+    ## print('Estimation Hill3')
     res = GenSA(c(1,1,1),fn=nll3,lower=lower[1:3],upper=upper[1:3],x=x,y=y,n=n)
     par_hat$Hill3 = res$par[1:3]
     ed50_hat$Hill3 = res$par[1]
@@ -125,7 +125,7 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
   }
   if('Hill4' %in% SCDR_model){
     ## Estimation Hill4
-    print('Estimation Hill4')
+    ## print('Estimation Hill4')
     res = GenSA(c(1,1,1,0),fn=nll4,lower=lower[1:4],upper=upper[1:4],x=x,y=y,n=n)
     par_hat$Hill4 = res$par[1:4]
     ed50_hat$Hill4 = res$par[1] * ( (res$par[3] - 2*res$par[4]) / res$par[3] )**(1/res$par[2])

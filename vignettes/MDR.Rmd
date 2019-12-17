@@ -4,12 +4,13 @@ subtitle: Dose-response analysis of toxicological and pharmacological mixtures w
 author: Gilles Guillot
 date: "`r Sys.Date()`"
 # output: rmarkdown::html_vignette
-abstract: We introduce the R package MDR with examples. It provides tools for computing the MDR statistic and assessing the significance of the observed departure from Loewe additivity. It also provide tools for the analysis of single compound dose-response experiment data. It is a companion package to the article by @MDR_Guillot2019.
+abstract: We introduce the R package MDR with examples. It provides tools for computing the model deviation ratio (MDR) statistic and assessing the significance of the observed departure from Loewe additivity. It also provides tools for the analysis of single compound dose-response experiment data. It is a companion package to the article by @MDR_Guillot2019.
 output:
   #rmarkdown::html_vignette:
   pdf_document:
     toc: true
     toc_depth: 2
+    number_sections: true
 header-includes:
    - \usepackage{setspace}
    - \onehalfspacing
@@ -79,7 +80,7 @@ In the MDR method, the departure from   Loewe additivity is based on comparing a
 
 # Fitting single-variable dose response curves 
 
-The MDR package comes with functions for fitting dose-response curves to single-compound experiment data. The main function is `Fit_Single_Hill` which fits curves from the 2-,3- or 4-parameter Hill family: $$f(x) = d + \frac{c-d}{ ( 1+ (a/x)^b)}$$
+The MDR package comes with functions for fitting dose-response curves to single-compound experiment data. The main function is `Fit_Single_Hill` which fits curves from the 2-, 3- or 4-parameter Hill family: $$f(x) = d + \frac{c-d}{ ( 1+ (a/x)^b)}$$
 This functions allows users to perform parameter estimation, boostrap compuation to quantify uncertainty attached to parameter estimates and model selection by cross-validation. 
 Its use is illustrated below: 
 
@@ -107,7 +108,7 @@ res_scdrx_mock = Fit_Single_Hill(x=simdat$x[subs],
 res_scdrx$par_hat$Hill2
 par(mfrow=c(1,2))
 hist(res_scdrx_boot$par_boot$Hill2[,1],breaks=30,
-     main='Boostrap disitribution',xlab='a')
+     main='Boostrap distribution',xlab='a')
 abline(v=res_scdrx$par_hat$Hill2[1],col='firebrick3',lwd=2)
 hist(res_scdrx_boot$par_boot$Hill2[,2],breaks=30,
       main='',xlab='b')
@@ -272,7 +273,7 @@ and $$MDR =  \frac{1}{y_e^*(a/X_e + 1/Y_e)}$$
 
 
 
-```{r comp_mdr}
+```{r comp_mdr, message=FALSE}
 library(MDR)
 str(simdat)   
 res_mdr = Compute_MDR(x=simdat$x,
@@ -322,11 +323,158 @@ pval
 
 
 
-```{r resamp}
-```
 
 
 ## Re-analysis of data of @dalla2014sensitivity
+
+### Single-compound dose-response curves 
+
+A subset of the numerical data contained as table 1 and 2 in @dalla2014sensitivity is provided as R objects `dallabona.sc` and `dallabonna.mix`.  These data are used below to show how the MDr can be computed together with an estimate of the uncertainty. 
+
+```{r dallab_fig2, cap="Examples of estimated single-compound dose-response curves"}
+## Attempt to reproduce approximately figure 2 in Dalla Bona et al. 2014
+par(mfrow=c(1,3))
+for(i in sort((1:10)[dallabona.sc[,1] %in% c('SGD','EFX','CPX')],decreasing=TRUE))
+{
+  r =  (dallabona.sc[i,'max'] / dallabona.sc[i,'min'])^(1/4)
+  r
+  doses = dallabona.sc[1,'min']*c(1,r,r^2,r^3,r^4)
+  dr_func = function(doses,EC50,Hill.Slope){ 1/(1+10^((log10(EC50) - log10(doses))*Hill.Slope)) }
+
+  dd = seq(1,500,l=1000)
+  plot(dd,dr_func(doses=dd,EC50=dallabona.sc[i,'EC50'],Hill.Slope = dallabona.sc[i,'Hill.Slope']),
+       type='l',log='x', 
+       xlab=expression(paste(g.,L ^{-1})),
+       ylab = expression(paste(Immobilizartion,"%",sep=" ")),
+       main=dallabona.sc[i,1],lwd=2)
+}
+
+```
+
+### Mixture ED50
+
+
+```{r dallab_fig3,cap ="Estimated EC50",message=FALSE}
+## Attempt to reproduce approximately panels e-h in figure 2 of Dalla Bona et al. 2014
+par(mfrow=c(2,2),mai=rep(.4,4))
+for(i in 1:4)
+{
+  names = unique(dallabona.mix[,1:2])[i,]
+  name.a = unlist(names[1]) ; name.b = unlist(names[2])
+  i.a = dallabona.sc[,1] == name.a
+  r =  (dallabona.sc[i.a,'max'] / dallabona.sc[i.a,'min'])^(1/4)
+  dsc.a = dallabona.sc[i.a,'min'] * c(1,r,r^2,r^3,r^4)
+  i.b = dallabona.sc[,1] == name.b
+  r =  (dallabona.sc[i.b,'max'] / dallabona.sc[i.b,'min'])^(1/4)
+  dsc.b = dallabona.sc[i.b,'min'] * c(1,r,r^2,r^3,r^4)
+
+  plot(dsc.a,dsc.b,type="n", xlab=name.a, ylab=name.b,cex=1.5,
+       xlim=c(0,dallabona.sc[i.a,'max']),
+       ylim=c(0,dallabona.sc[i.b,'max']))
+  points(dsc.a,rep(0,5),pch=16,cex=1.5,col='chartreuse4') ; abline(h=0,col='chartreuse4',lty=2)
+  points(rep(0,5),dsc.b,pch=16,cex=1.5,col='chartreuse4') ; abline(v=0,col='chartreuse4',lty=2)
+  segments(dallabona.sc[dallabona.sc$Compound==name.a,'EC50'],0,
+           0,dallabona.sc[dallabona.sc$Compound==name.b,'EC50'],col='red',lty=1)
+  ## loop on various mixtures proportions for this particular combination of compounds
+  for(j in (1:12)[dallabona.mix[,1] == name.a &  dallabona.mix[,2] == name.b] )
+  {
+    w.max = dallabona.mix[j,'max.b'] / dallabona.mix[j,'max.a']
+    w.min = dallabona.mix[j,'min.b'] / dallabona.mix[j,'min.a']
+    r.a = (dallabona.mix[j,'max.a'] / dallabona.mix[j,'min.a'])^(1/4)
+    dm.a = dallabona.mix[j,'min.a'] * c(1,r.a,r.a^2,r.a^3,r.a^4)
+    r.b = (dallabona.mix[j,'max.b'] / dallabona.mix[j,'min.b'])^(1/4)
+    dm.b = dallabona.mix[j,'min.b'] * c(1,r.b,r.b^2,r.b^3,r.b^4)
+    points(cbind(dm.a,dm.b),pch=16,cex=1.5,col='chartreuse4')
+    abline(a=0,b=w.max,col='chartreuse4',lty=2)
+    points(dallabona.mix[j,'EC50.a'], dallabona.mix[j,'EC50.b'],pch=1,cex=1.5,col='red')
+    segments(dallabona.mix[j,'EC50.a.low'],dallabona.mix[j,'EC50.b.low'],
+             dallabona.mix[j,'EC50.a.up'],dallabona.mix[j,'EC50.b.up'],col='red',lwd=3)
+  }
+}
+```
+
+
+```{r dallab_MDR, message=FALSE}
+n_resamp = 3 ## set to 3 to save time when building package, 
+## n_resamp should be set to e.g. 1000
+## will require around 30 min of computation on a standard laptop 
+MDR_sim_mock = matrix(nr=nrow(dallabona.mix),nc=n_resamp) 
+MDR_obs = rep(NA,nrow(dallabona.mix))
+
+
+for(i in 1:4) ## loop on the four compound combinations
+{
+  names = unique(dallabona.mix[,1:2])[i,]
+  name.a = unlist(names[1]) ; name.b = unlist(names[2])
+  i.a = dallabona.sc[,1] == name.a # where to find info in single compound data dallabona.sc
+  r =  (dallabona.sc[i.a,'max'] / dallabona.sc[i.a,'min'])^(1/4)
+  dsc.a = dallabona.sc[i.a,'min'] * c(1,r,r^2,r^3,r^4)
+  i.b = dallabona.sc[,1] == name.b
+  r =  (dallabona.sc[i.b,'max'] / dallabona.sc[i.b,'min'])^(1/4)
+  dsc.b = dallabona.sc[i.b,'min'] * c(1,r,r^2,r^3,r^4)
+
+  for(j in (1:12)[dallabona.mix[,1] == name.a &  dallabona.mix[,2] == name.b] ) # loop on compound combination x mixture proportions
+  {
+    w.max = dallabona.mix[j,'max.b'] / dallabona.mix[j,'max.a']
+    r.a = (dallabona.mix[j,'max.a'] / dallabona.mix[j,'min.a'])^(1/4)
+    dm.a = dallabona.mix[j,'min.a'] * c(1,r.a,r.a^2,r.a^3,r.a^4)
+    r.b = (dallabona.mix[j,'max.b'] / dallabona.mix[j,'min.b'])^(1/4)
+    dm.b = dallabona.mix[j,'min.b'] * c(1,r.b,r.b^2,r.b^3,r.b^4)
+    w = dallabona.mix$min.a/(dallabona.mix$min.a + dallabona.mix$min.b)
+    EC50.DA = 1/(w[j]/dallabona.sc$EC50[i.a] + (1-w[j])/dallabona.sc$EC50[i.b])
+    EC50.obs = dallabona.mix$EC50.a[j] + dallabona.mix$EC50.b[j]
+    MDR_obs[j] = EC50.DA / EC50.obs
+
+    ## put together info on design in form of three vectors (x,y,n)
+    x = c(dsc.a, rep(0,length(dsc.b)), dm.a)
+    y = c(rep(0,length(dsc.a)), dsc.b, dm.b)
+    n = rep(20,length(x)) # OECD 202 (cf section 2.3 of Dallabona)
+
+    res = Resample_MDR(x=x,y=y,n=n,
+                       SCDR_model = "Hill2",
+                       par_Hill=c(a1=dallabona.sc$EC50[i.a],
+                                  b1=dallabona.sc$Hill.Slope[i.a],
+                                  a2=dallabona.sc$EC50[i.b],
+                                  b2=dallabona.sc$Hill.Slope[i.b]),
+                       lower = c(0.0001,0.0001,0.0001,0.0001) , 
+                       upper = c(1000,100,1,1), 
+                       design='single-ray',
+                       n_resamp=n_resamp,
+                       distribution = "binom")
+    MDR_sim_mock[j,] = res$MDR_resamp
+  }
+}
+```
+
+
+```{r dallab_plot_MDR, caption='Histogram of resampled MDR values. Green line: observde MDR values, orange lines: 0.025 and 0.975 quantiles of resampled distribution.'}
+## Plotting some of the simulated MDR values
+## MDR_sim has the same structure as MDR_sim_mock but was obtained with n_resamp=1000
+cdf_mdr1 = ecdf(MDR_sim[1,])
+pval1 = ifelse(MDR_obs[1] > median(MDR_sim[1,]),
+              2*(1-cdf_mdr1(MDR_obs[1])),
+              2*cdf_mdr1(MDR_obs[1]))
+#
+cdf_mdr2 = ecdf(MDR_sim[2,])
+pval2 = ifelse(MDR_obs[2] > median(MDR_sim[2,]),
+              2*(1-cdf_mdr2(MDR_obs[2])),
+              2*cdf_mdr2(MDR_obs[2]))
+par(mfrow=c(1,2))
+hist(MDR_sim[1,],breaks=30,
+     main='Histogram of resampled \n MDR values',
+     sub=rownames(MDR_sim)[1],
+     xlab=paste('pval=',signif(pval1,dig=2)))  
+abline(v=MDR_obs[1],lwd=2,col=3) 
+abline(v=quantile(MDR_sim[1,],p=0.025),lwd=2,lty=2,col='orange') 
+abline(v=quantile(MDR_sim[1,],p=0.975),lwd=2,lty=2,col='orange')
+hist(MDR_sim[2,],breaks=30,main='',
+     sub=rownames(MDR_sim)[2],
+     xlab=paste('pval=',signif(pval2,dig=2)))  
+abline(v=MDR_obs[2],lwd=2,col=3) 
+abline(v=quantile(MDR_sim[2,],p=0.025),lwd=2,lty=2,col='orange') 
+abline(v=quantile(MDR_sim[2,],p=0.975),lwd=2,lty=2,col='orange')
+
+```
 
 
 # References 
