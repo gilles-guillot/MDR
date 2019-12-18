@@ -3,7 +3,8 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
                             upper = c(10,10,1,1) ,
                             bootstrap=FALSE, B=100,
                             select=FALSE,
-                            eps = 1e-15)
+                            eps = 1e-15,
+                            verbose=TRUE)
 {
   #' @title  Estimate parameters in   Hill model families
   #' @description
@@ -20,7 +21,7 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
   #' @param B number of bootstrap resampling
   #' @param select TRUE/FALSE perform model selection
   #' @param eps used to replace 0's by small numerical values
-  #'
+  #' @param verbose will print the percentage of computation carried out if TRUE
   #' @return
   #' Estimate of Hill model(s) parameters and bootstrap sample for this estimate
   #' Perform model selection by cross-validation
@@ -84,12 +85,12 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
     par_hat$Hill2 = res$par[1:2]
     ed50_hat$Hill2 = res$par[1]
     if(bootstrap){
-      print('Bootstrap Hill2')
+      if(verbose) { print('Bootstrap Hill2') }
       par2_boot = matrix(nrow =B,ncol=2)
       ed50_2_boot = rep(NA,B)
       for(iboot in 1:B){
-        Sys.sleep(0.01); cat("\r","# Percentage resampling iterations:",
-                             signif(100*iboot/B,digits=3),"%")
+        if(verbose) { Sys.sleep(0.01); cat("\r","# Percentage resampling iterations:",
+                             signif(100*iboot/B,digits=3),"%") }
         y_boot = rbinom(n=length(x),size=n,prob=y/n)
         res = GenSA(c(1,1),fn=nll2,lower=lower[1:2],upper=upper[1:2],
                     x=x,y=y_boot,n=n)
@@ -107,12 +108,12 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
     par_hat$Hill3 = res$par[1:3]
     ed50_hat$Hill3 = res$par[1]
     if(bootstrap){
-      print('Bootstrap Hill3')
+      if(verbose) { print('Bootstrap Hill3') }
       par3_boot = matrix(nrow =B,ncol=3)
       ed50_3_boot = rep(NA,B)
       for(iboot in 1:B){
-        Sys.sleep(0.01); cat("\r","# Percentage resampling iterations:",
-                             signif(100*iboot/B,digits=3),"%")
+        if(verbose) { Sys.sleep(0.01); cat("\r","# Percentage resampling iterations:",
+                             signif(100*iboot/B,digits=3),"%") }
         y_boot = rbinom(n=length(x),size=n,prob=y/n)
         res = GenSA(c(1,1,1),fn=nll3,lower=lower[1:3],upper=upper[1:3],
                     x=x,y=y_boot,n=n)
@@ -130,12 +131,12 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
     par_hat$Hill4 = res$par[1:4]
     ed50_hat$Hill4 = res$par[1] * ( (res$par[3] - 2*res$par[4]) / res$par[3] )**(1/res$par[2])
     if(bootstrap){
-      print('Bootstrap Hill4')
+      if(verbose) { print('Bootstrap Hill4') }
       par4_boot = matrix(nrow =B,ncol=4)
       ed50_4_boot = rep(NA,B)
       for(iboot in 1:B){
-        Sys.sleep(0.01); cat("\r","# Percentage resampling iterations:",
-                             signif(100*iboot/B,digits=3),"%")
+        if(verbose) { Sys.sleep(0.01); cat("\r","# Percentage resampling iterations:",
+                             signif(100*iboot/B,digits=3),"%") }
         y_boot = rbinom(n=length(x),size=n,prob=y/n)
         res = GenSA(c(1,1,1,0),fn=nll3,lower=lower[1:4],upper=upper[1:4],
                     x=x,y=y_boot,n=n)
@@ -149,7 +150,7 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
   ## Model selection
   if(select){
     if('Hill2' %in% SCDR_model){
-      print('CV Hill2')
+      if(verbose) { print('CV Hill2') }
       llcv2 = 0
       for(k in 1:length(x)){
         res = GenSA(c(1,1),fn=nll2,lower=lower[1:2],upper=upper[1:2],
@@ -160,7 +161,7 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
       llcv$Hill2=llcv2
     }
     if('Hill3' %in% SCDR_model){
-      print('CV Hill3')
+      if(verbose) { print('CV Hill3') }
       llcv3 = 0
       for(k in 1:length(x)){
         res = GenSA(c(1,1,1),fn=nll3,lower=lower[1:3],upper=upper[1:3],
@@ -170,7 +171,7 @@ Fit_Single_Hill <- function(x,y,n,SCDR_model=c('Hill2','Hill3','Hill4'),
       llcv$Hill3=llcv3
     }
     if('Hill4' %in% SCDR_model){
-      print('CV Hill4')
+      if(verbose) { print('CV Hill4') }
       llcv4 = 0
       for(k in 1:length(x)){
         res = GenSA(c(1,1,1,0),fn=nll4,lower=lower[1:4],upper=upper[1:4],

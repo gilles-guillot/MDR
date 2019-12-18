@@ -3,7 +3,7 @@
 \docType{data}
 \name{res_scdrx_boot}
 \alias{res_scdrx_boot}
-\title{Documentation for res_scdrx_boot}
+\title{Object for illustrating documentation, cf vignette}
 \format{a list as produced by function `Fit_Single_Hill`}
 \source{
 simulated by example below
@@ -12,7 +12,7 @@ simulated by example below
 res_scdrx_boot
 }
 \description{
-Documentation for res_scdrx_boot
+Object for illustrating documentation, cf vignette
 }
 \examples{
  \dontrun{

@@ -3,7 +3,7 @@
 \docType{data}
 \name{dallabona.sc}
 \alias{dallabona.sc}
-\title{Documentation for dallabona.sc}
+\title{Data extracted from Dallabonna et al. Chemosphere (2014)}
 \format{an R object}
 \source{
 subset of numerical values from Table 1 and 2 in Dallabonna et al. Chemosphere (2014)
@@ -12,6 +12,6 @@ subset of numerical values from Table 1 and 2 in Dallabonna et al. Chemosphere (
 dallabona.sc
 }
 \description{
-Documentation for dallabona.sc
+Data extracted from Dallabonna et al. Chemosphere (2014)
 }
 \keyword{datasets}

@@ -3,7 +3,7 @@
 \docType{data}
 \name{MDR_obs}
 \alias{MDR_obs}
-\title{Documentation for MDR_obs}
+\title{Object for illustrating documentation, cf vignette}
 \format{an R object}
 \source{
 MDR computed from data in  Dallabonna et al. Chemosphere (2014)
@@ -12,6 +12,6 @@ MDR computed from data in  Dallabonna et al. Chemosphere (2014)
 MDR_obs
 }
 \description{
-Documentation for MDR_obs
+Object for illustrating documentation, cf vignette
 }
 \keyword{datasets}

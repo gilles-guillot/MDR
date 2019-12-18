@@ -1,4 +1,4 @@
-#' Documentation for res_scdrx_boot
+#' Object for illustrating documentation, cf vignette
 #' @format a list as produced by function `Fit_Single_Hill`
 #' @source simulated by example below
 #' @examples

@@ -14,7 +14,8 @@ Fit_Single_Hill(
   bootstrap = FALSE,
   B = 100,
   select = FALSE,
-  eps = 1e-15
+  eps = 1e-15,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ Fit_Single_Hill(
 \item{select}{TRUE/FALSE perform model selection}
 
 \item{eps}{used to replace 0's by small numerical values}
+
+\item{verbose}{will print the percentage of computation carried out if TRUE}
 }
 \value{
 Estimate of Hill model(s) parameters and bootstrap sample for this estimate

@@ -24,6 +24,7 @@
 #' @param upper upper limits for the search of parameter
 #' @param n_resamp number of dataset resampled
 #' @param distribution distribution of response conditional on Hill function value
+#' @param verbose will print the percentage of computation carried out if TRUE
 #' @return a list with an element named MDR_resamp
 #' @export
 Resample_MDR <- function(x,y,z=NULL,n,
@@ -32,7 +33,7 @@ Resample_MDR <- function(x,y,z=NULL,n,
                          design,
                          lower = c(0.0001,0.0001,0.0001,0.0001) ,
                          upper = c(10,10,1,1) ,
-                         n_resamp, distribution='binom')
+                         n_resamp, distribution='binom',verbose=TRUE)
 {
   if( is.null(z) & is.null(par_Hill) )
     stop("Please provide at z or par_Hill")
@@ -59,8 +60,8 @@ Resample_MDR <- function(x,y,z=NULL,n,
   MDR_resamp = rep(NA,n_resamp)
   for(isamp in 1:n_resamp)
   {
-    Sys.sleep(0.07); cat("\r","# Percentage resampling iterations:",
-                         signif(100*isamp/n_resamp,digits=3),"%")
+    if(verbose) { Sys.sleep(0.07); cat("\r","# Percentage resampling iterations:",
+                         signif(100*isamp/n_resamp,digits=3),"%") }
     simdat = Sim_Mixture(x=x,y=y,n=n,
                          SCDR_model=SCDR_model,
                          par_Hill=par_Hill,

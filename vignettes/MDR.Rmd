@@ -6,8 +6,8 @@ date: "`r Sys.Date()`"
 # output: rmarkdown::html_vignette
 abstract: We introduce the R package MDR with examples. It provides tools for computing the model deviation ratio (MDR) statistic and assessing the significance of the observed departure from Loewe additivity. It also provides tools for the analysis of single compound dose-response experiment data. It is a companion package to the article by @MDR_Guillot2019.
 output:
-  #rmarkdown::html_vignette:
-  pdf_document:
+  rmarkdown::html_vignette:
+  #pdf_document:
     toc: true
     toc_depth: 2
     number_sections: true
@@ -58,10 +58,10 @@ more coveniently written as
 x_e / X_e +  y_e/Y_e = 1
 \end{equation}
  
- If this conditions holds for any $ (x_e,y_e)$ eliciting effect $e$, then the isobole at level $e$ is a  segment joining the points 
+ If this conditions holds for any $(x_e,y_e)$ eliciting effect $e$, then the isobole at level $e$ is a  segment joining the points 
  $(X_e,0)$ and  $(0,Y_e)$  in the domain $(x,y)$.
  
- If we denote by $f()$, $g()$ and $h(,)$ the dose-response functions  of compound 1, compound 2 and of the mixture respectively, then dose additivity holds when 
+ If we denote by $f()$, $g()$ and $h(,)$ the dose-response functions  of compound 1, compound 2 and of the mixture respectively, then dose (Loewe) additivity holds when 
  
  \begin{equation} \label{eq:Loewe}
  \frac{x}{f^{-1}(h(x,y))} + \frac{y}{g^{-1}(h(x,y))} = 1   
@@ -106,7 +106,7 @@ res_scdrx_mock = Fit_Single_Hill(x=simdat$x[subs],
                             B=5)
 ## next lines using res_scdrx pre-computed with B set to 1000
 res_scdrx$par_hat$Hill2
-par(mfrow=c(1,2))
+# par(mfrow=c(1,2))
 hist(res_scdrx_boot$par_boot$Hill2[,1],breaks=30,
      main='Boostrap distribution',xlab='a')
 abline(v=res_scdrx$par_hat$Hill2[1],col='firebrick3',lwd=2)
@@ -302,7 +302,8 @@ res_resamp_mock = Resample_MDR(x=simdat$x,y=simdat$y,
              lower = c(0.0001,0.0001,0.0001,0.0001) ,
              upper = c(10,10,1,1) ,
              n_resamp=3, 
-             distribution='binom')
+             distribution='binom',
+             verbose=FALSE)
 
 
 ## lines below using pre-computed output of Resample_MDR
@@ -333,7 +334,7 @@ A subset of the numerical data contained as table 1 and 2 in @dalla2014sensitivi
 
 ```{r dallab_fig2, cap="Examples of estimated single-compound dose-response curves"}
 ## Attempt to reproduce approximately figure 2 in Dalla Bona et al. 2014
-par(mfrow=c(1,3))
+# par(mfrow=c(1,3))
 for(i in sort((1:10)[dallabona.sc[,1] %in% c('SGD','EFX','CPX')],decreasing=TRUE))
 {
   r =  (dallabona.sc[i,'max'] / dallabona.sc[i,'min'])^(1/4)
@@ -356,7 +357,8 @@ for(i in sort((1:10)[dallabona.sc[,1] %in% c('SGD','EFX','CPX')],decreasing=TRUE
 
 ```{r dallab_fig3,cap ="Estimated EC50",message=FALSE}
 ## Attempt to reproduce approximately panels e-h in figure 2 of Dalla Bona et al. 2014
-par(mfrow=c(2,2),mai=rep(.4,4))
+#par(mfrow=c(2,2),
+par(mai=rep(.4,4))
 for(i in 1:4)
 {
   names = unique(dallabona.mix[,1:2])[i,]
@@ -440,7 +442,8 @@ for(i in 1:4) ## loop on the four compound combinations
                        upper = c(1000,100,1,1), 
                        design='single-ray',
                        n_resamp=n_resamp,
-                       distribution = "binom")
+                       distribution = "binom",
+                       verbose=FALSE)
     MDR_sim_mock[j,] = res$MDR_resamp
   }
 }
@@ -459,7 +462,7 @@ cdf_mdr2 = ecdf(MDR_sim[2,])
 pval2 = ifelse(MDR_obs[2] > median(MDR_sim[2,]),
               2*(1-cdf_mdr2(MDR_obs[2])),
               2*cdf_mdr2(MDR_obs[2]))
-par(mfrow=c(1,2))
+# par(mfrow=c(1,2))
 hist(MDR_sim[1,],breaks=30,
      main='Histogram of resampled \n MDR values',
      sub=rownames(MDR_sim)[1],

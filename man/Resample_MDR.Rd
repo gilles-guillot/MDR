@@ -15,7 +15,8 @@ Resample_MDR(
   lower = c(1e-04, 1e-04, 1e-04, 1e-04),
   upper = c(10, 10, 1, 1),
   n_resamp,
-  distribution = "binom"
+  distribution = "binom",
+  verbose = TRUE
 )
 }
 \arguments{
@@ -48,6 +49,8 @@ b2: b in 1/(1+(a/x)**b) for second compound}
 \item{n_resamp}{number of dataset resampled}
 
 \item{distribution}{distribution of response conditional on Hill function value}
+
+\item{verbose}{will print the percentage of computation carried out if TRUE}
 }
 \value{
 a list with an element named MDR_resamp

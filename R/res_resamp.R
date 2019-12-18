@@ -1,4 +1,4 @@
-#' Documentation for res_resamp
+#' Object for illustrating documentation, cf vignette
 #' @format a list as produced by function `Resample_MDR`
 #' @source simulated by example below
 #' @examples

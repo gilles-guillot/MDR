@@ -3,7 +3,7 @@
 \docType{data}
 \name{MDR_sim}
 \alias{MDR_sim}
-\title{Documentation for MDR_sim}
+\title{Object for illustrating documentation, cf vignette}
 \format{an R object}
 \source{
 MDR resampled from data in  Dallabonna et al. Chemosphere (2014)
@@ -12,7 +12,7 @@ MDR resampled from data in  Dallabonna et al. Chemosphere (2014)
 MDR_sim
 }
 \description{
-Documentation for MDR_sim
+Object for illustrating documentation, cf vignette
 }
 \details{
 rows contain compound combinations and concentration ratio, cf row names
