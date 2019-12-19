@@ -8,8 +8,10 @@ It is a companion package to the article Macacu, A., S. Lasagni, E. Carnesecchi,
 Solutions.”
 
 Requirement(s): 
+
 R package devtools https://cran.r-project.org/web/packages/devtools/index.html
 For Windows users: Rtools  https://cran.r-project.org/bin/windows/Rtools/
 
 For installation under R: 
+
 devtools::install_github('gilles-guillot/MDR')
