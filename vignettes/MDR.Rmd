@@ -16,8 +16,10 @@ header-includes:
    - \onehalfspacing
    - \usepackage{manfnt}
 bibliography: 
-- /home/gilles/Dropbox/com/bibtex/biblio.bib
-- /home/gilles/Dropbox/com/bibtex/gilles.bib 
+# - /home/gilles/Dropbox/com/bibtex/biblio.bib
+# - /home/gilles/Dropbox/com/bibtex/gilles.bib 
+- ./biblio.bib
+- ./gilles.bib
 vignette: >
   %\VignetteIndexEntry{Dose-response analysis of mixture data with the model deviation ratio method.}
   %\VignetteEngine{knitr::rmarkdown}
