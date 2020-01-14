@@ -332,24 +332,24 @@ pval
 
 ### Single-compound dose-response curves 
 
-A subset of the numerical data contained as table 1 and 2 in @dalla2014sensitivity is provided as R objects `dallabona.sc` and `dallabonna.mix`.  These data are used below to show how the MDr can be computed together with an estimate of the uncertainty. 
+A subset of the numerical data contained as table 1 and 2 in @dalla2014sensitivity is provided as R objects `D.magna.sc` and `D.magna.mix`.  These data are used below to show how the MDr can be computed together with an estimate of the uncertainty. 
 
 ```{r dallab_fig2, cap="Examples of estimated single-compound dose-response curves"}
 ## Attempt to reproduce approximately figure 2 in Dalla Bona et al. 2014
 # par(mfrow=c(1,3))
-for(i in sort((1:10)[dallabona.sc[,1] %in% c('SGD','EFX','CPX')],decreasing=TRUE))
+for(i in sort((1:10)[D.magna.sc[,1] %in% c('SGD','EFX','CPX')],decreasing=TRUE))
 {
-  r =  (dallabona.sc[i,'max'] / dallabona.sc[i,'min'])^(1/4)
+  r =  (D.magna.sc[i,'max'] / D.magna.sc[i,'min'])^(1/4)
   r
-  doses = dallabona.sc[1,'min']*c(1,r,r^2,r^3,r^4)
+  doses = D.magna.sc[1,'min']*c(1,r,r^2,r^3,r^4)
   dr_func = function(doses,EC50,Hill.Slope){ 1/(1+10^((log10(EC50) - log10(doses))*Hill.Slope)) }
 
   dd = seq(1,500,l=1000)
-  plot(dd,dr_func(doses=dd,EC50=dallabona.sc[i,'EC50'],Hill.Slope = dallabona.sc[i,'Hill.Slope']),
+  plot(dd,dr_func(doses=dd,EC50=D.magna.sc[i,'EC50'],Hill.Slope = D.magna.sc[i,'Hill.Slope']),
        type='l',log='x', 
        xlab=expression(paste(g.,L ^{-1})),
        ylab = expression(paste(Immobilizartion,"%",sep=" ")),
-       main=dallabona.sc[i,1],lwd=2)
+       main=D.magna.sc[i,1],lwd=2)
 }
 
 ```
@@ -363,36 +363,36 @@ for(i in sort((1:10)[dallabona.sc[,1] %in% c('SGD','EFX','CPX')],decreasing=TRUE
 par(mai=rep(.4,4))
 for(i in 1:4)
 {
-  names = unique(dallabona.mix[,1:2])[i,]
+  names = unique(D.magna.mix[,1:2])[i,]
   name.a = unlist(names[1]) ; name.b = unlist(names[2])
-  i.a = dallabona.sc[,1] == name.a
-  r =  (dallabona.sc[i.a,'max'] / dallabona.sc[i.a,'min'])^(1/4)
-  dsc.a = dallabona.sc[i.a,'min'] * c(1,r,r^2,r^3,r^4)
-  i.b = dallabona.sc[,1] == name.b
-  r =  (dallabona.sc[i.b,'max'] / dallabona.sc[i.b,'min'])^(1/4)
-  dsc.b = dallabona.sc[i.b,'min'] * c(1,r,r^2,r^3,r^4)
+  i.a = D.magna.sc[,1] == name.a
+  r =  (D.magna.sc[i.a,'max'] / D.magna.sc[i.a,'min'])^(1/4)
+  dsc.a = D.magna.sc[i.a,'min'] * c(1,r,r^2,r^3,r^4)
+  i.b = D.magna.sc[,1] == name.b
+  r =  (D.magna.sc[i.b,'max'] / D.magna.sc[i.b,'min'])^(1/4)
+  dsc.b = D.magna.sc[i.b,'min'] * c(1,r,r^2,r^3,r^4)
 
   plot(dsc.a,dsc.b,type="n", xlab=name.a, ylab=name.b,cex=1.5,
-       xlim=c(0,dallabona.sc[i.a,'max']),
-       ylim=c(0,dallabona.sc[i.b,'max']))
+       xlim=c(0,D.magna.sc[i.a,'max']),
+       ylim=c(0,D.magna.sc[i.b,'max']))
   points(dsc.a,rep(0,5),pch=16,cex=1.5,col='chartreuse4') ; abline(h=0,col='chartreuse4',lty=2)
   points(rep(0,5),dsc.b,pch=16,cex=1.5,col='chartreuse4') ; abline(v=0,col='chartreuse4',lty=2)
-  segments(dallabona.sc[dallabona.sc$Compound==name.a,'EC50'],0,
-           0,dallabona.sc[dallabona.sc$Compound==name.b,'EC50'],col='red',lty=1)
+  segments(D.magna.sc[D.magna.sc$Compound==name.a,'EC50'],0,
+           0,D.magna.sc[D.magna.sc$Compound==name.b,'EC50'],col='red',lty=1)
   ## loop on various mixtures proportions for this particular combination of compounds
-  for(j in (1:12)[dallabona.mix[,1] == name.a &  dallabona.mix[,2] == name.b] )
+  for(j in (1:12)[D.magna.mix[,1] == name.a &  D.magna.mix[,2] == name.b] )
   {
-    w.max = dallabona.mix[j,'max.b'] / dallabona.mix[j,'max.a']
-    w.min = dallabona.mix[j,'min.b'] / dallabona.mix[j,'min.a']
-    r.a = (dallabona.mix[j,'max.a'] / dallabona.mix[j,'min.a'])^(1/4)
-    dm.a = dallabona.mix[j,'min.a'] * c(1,r.a,r.a^2,r.a^3,r.a^4)
-    r.b = (dallabona.mix[j,'max.b'] / dallabona.mix[j,'min.b'])^(1/4)
-    dm.b = dallabona.mix[j,'min.b'] * c(1,r.b,r.b^2,r.b^3,r.b^4)
+    w.max = D.magna.mix[j,'max.b'] / D.magna.mix[j,'max.a']
+    w.min = D.magna.mix[j,'min.b'] / D.magna.mix[j,'min.a']
+    r.a = (D.magna.mix[j,'max.a'] / D.magna.mix[j,'min.a'])^(1/4)
+    dm.a = D.magna.mix[j,'min.a'] * c(1,r.a,r.a^2,r.a^3,r.a^4)
+    r.b = (D.magna.mix[j,'max.b'] / D.magna.mix[j,'min.b'])^(1/4)
+    dm.b = D.magna.mix[j,'min.b'] * c(1,r.b,r.b^2,r.b^3,r.b^4)
     points(cbind(dm.a,dm.b),pch=16,cex=1.5,col='chartreuse4')
     abline(a=0,b=w.max,col='chartreuse4',lty=2)
-    points(dallabona.mix[j,'EC50.a'], dallabona.mix[j,'EC50.b'],pch=1,cex=1.5,col='red')
-    segments(dallabona.mix[j,'EC50.a.low'],dallabona.mix[j,'EC50.b.low'],
-             dallabona.mix[j,'EC50.a.up'],dallabona.mix[j,'EC50.b.up'],col='red',lwd=3)
+    points(D.magna.mix[j,'EC50.a'], D.magna.mix[j,'EC50.b'],pch=1,cex=1.5,col='red')
+    segments(D.magna.mix[j,'EC50.a.low'],D.magna.mix[j,'EC50.b.low'],
+             D.magna.mix[j,'EC50.a.up'],D.magna.mix[j,'EC50.b.up'],col='red',lwd=3)
   }
 }
 ```
@@ -402,31 +402,31 @@ for(i in 1:4)
 n_resamp = 3 ## set to 3 to save time when building package, 
 ## n_resamp should be set to e.g. 1000
 ## will require around 30 min of computation on a standard laptop 
-MDR_sim_mock = matrix(nr=nrow(dallabona.mix),nc=n_resamp) 
-MDR_obs = rep(NA,nrow(dallabona.mix))
+MDR_sim_mock = matrix(nr=nrow(D.magna.mix),nc=n_resamp) 
+MDR_obs = rep(NA,nrow(D.magna.mix))
 
 
 for(i in 1:4) ## loop on the four compound combinations
 {
-  names = unique(dallabona.mix[,1:2])[i,]
+  names = unique(D.magna.mix[,1:2])[i,]
   name.a = unlist(names[1]) ; name.b = unlist(names[2])
-  i.a = dallabona.sc[,1] == name.a # where to find info in single compound data dallabona.sc
-  r =  (dallabona.sc[i.a,'max'] / dallabona.sc[i.a,'min'])^(1/4)
-  dsc.a = dallabona.sc[i.a,'min'] * c(1,r,r^2,r^3,r^4)
-  i.b = dallabona.sc[,1] == name.b
-  r =  (dallabona.sc[i.b,'max'] / dallabona.sc[i.b,'min'])^(1/4)
-  dsc.b = dallabona.sc[i.b,'min'] * c(1,r,r^2,r^3,r^4)
+  i.a = D.magna.sc[,1] == name.a # where to find info in single compound data D.magna.sc
+  r =  (D.magna.sc[i.a,'max'] / D.magna.sc[i.a,'min'])^(1/4)
+  dsc.a = D.magna.sc[i.a,'min'] * c(1,r,r^2,r^3,r^4)
+  i.b = D.magna.sc[,1] == name.b
+  r =  (D.magna.sc[i.b,'max'] / D.magna.sc[i.b,'min'])^(1/4)
+  dsc.b = D.magna.sc[i.b,'min'] * c(1,r,r^2,r^3,r^4)
 
-  for(j in (1:12)[dallabona.mix[,1] == name.a &  dallabona.mix[,2] == name.b] ) # loop on compound combination x mixture proportions
+  for(j in (1:12)[D.magna.mix[,1] == name.a &  D.magna.mix[,2] == name.b] ) # loop on compound combination x mixture proportions
   {
-    w.max = dallabona.mix[j,'max.b'] / dallabona.mix[j,'max.a']
-    r.a = (dallabona.mix[j,'max.a'] / dallabona.mix[j,'min.a'])^(1/4)
-    dm.a = dallabona.mix[j,'min.a'] * c(1,r.a,r.a^2,r.a^3,r.a^4)
-    r.b = (dallabona.mix[j,'max.b'] / dallabona.mix[j,'min.b'])^(1/4)
-    dm.b = dallabona.mix[j,'min.b'] * c(1,r.b,r.b^2,r.b^3,r.b^4)
-    w = dallabona.mix$min.a/(dallabona.mix$min.a + dallabona.mix$min.b)
-    EC50.DA = 1/(w[j]/dallabona.sc$EC50[i.a] + (1-w[j])/dallabona.sc$EC50[i.b])
-    EC50.obs = dallabona.mix$EC50.a[j] + dallabona.mix$EC50.b[j]
+    w.max = D.magna.mix[j,'max.b'] / D.magna.mix[j,'max.a']
+    r.a = (D.magna.mix[j,'max.a'] / D.magna.mix[j,'min.a'])^(1/4)
+    dm.a = D.magna.mix[j,'min.a'] * c(1,r.a,r.a^2,r.a^3,r.a^4)
+    r.b = (D.magna.mix[j,'max.b'] / D.magna.mix[j,'min.b'])^(1/4)
+    dm.b = D.magna.mix[j,'min.b'] * c(1,r.b,r.b^2,r.b^3,r.b^4)
+    w = D.magna.mix$min.a/(D.magna.mix$min.a + D.magna.mix$min.b)
+    EC50.DA = 1/(w[j]/D.magna.sc$EC50[i.a] + (1-w[j])/D.magna.sc$EC50[i.b])
+    EC50.obs = D.magna.mix$EC50.a[j] + D.magna.mix$EC50.b[j]
     MDR_obs[j] = EC50.DA / EC50.obs
 
     ## put together info on design in form of three vectors (x,y,n)
@@ -436,10 +436,10 @@ for(i in 1:4) ## loop on the four compound combinations
 
     res = Resample_MDR(x=x,y=y,n=n,
                        SCDR_model = "Hill2",
-                       par_Hill=c(a1=dallabona.sc$EC50[i.a],
-                                  b1=dallabona.sc$Hill.Slope[i.a],
-                                  a2=dallabona.sc$EC50[i.b],
-                                  b2=dallabona.sc$Hill.Slope[i.b]),
+                       par_Hill=c(a1=D.magna.sc$EC50[i.a],
+                                  b1=D.magna.sc$Hill.Slope[i.a],
+                                  a2=D.magna.sc$EC50[i.b],
+                                  b2=D.magna.sc$Hill.Slope[i.b]),
                        lower = c(0.0001,0.0001,0.0001,0.0001) , 
                        upper = c(1000,100,1,1), 
                        design='single-ray',
