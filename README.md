@@ -15,4 +15,4 @@ For Windows users: Rtools  https://cran.r-project.org/bin/windows/Rtools/
 
 For installation under R: 
 
-devtools::install_github('gilles-guillot/MDR')
+`devtools::install_github('gilles-guillot/MDR')`
