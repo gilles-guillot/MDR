@@ -21,6 +21,8 @@ Compute_MDR <- function(x,y,z,n,
   #' @param lower lower limits for the search of parameter
   #' @param upper upper limits for the search of parameter
   #' @return estimates of doses or concentrations eliciting 50\% max effect and of MDR defined as d50_DA / d50_obs
+  #' With this definition, MDR>1 (d50_DA > d50_obs) is suggestive of a synergistic  mixture
+  #' and MDR<1 (d50_DA < d50_obs) is suggestive of an antagonistic mixture
   #' @importFrom graphics  abline lines plot
   #' @export
 

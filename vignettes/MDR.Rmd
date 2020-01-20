@@ -4,7 +4,7 @@ subtitle: Dose-response analysis of toxicological and pharmacological mixtures w
 author: Gilles Guillot
 date: "`r Sys.Date()`"
 # output: rmarkdown::html_vignette
-abstract: We introduce the R package MDR with examples. It provides tools for computing the model deviation ratio (MDR) statistic and assessing the significance of the observed departure from Loewe additivity. It also provides tools for the analysis of single compound dose-response experiment data. It is a companion package to the article by @MDR_Guillot2019.
+abstract: We introduce the R package MDR with examples. It provides tools for computing the model deviation ratio (MDR) statistic and assessing the significance of the observed departure from Loewe additivity. It also provides tools for the analysis of single compound dose-response experiment data. It is a companion package to the article by @MDR_Guillot2020. 
 output:
   rmarkdown::html_vignette:
   #pdf_document:

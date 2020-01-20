@@ -41,6 +41,8 @@ Each of the design above has to contain single-compound experiment data}
 }
 \value{
 estimates of doses or concentrations eliciting 50\% max effect and of MDR defined as d50_DA / d50_obs
+With this definition, MDR>1 (d50_DA > d50_obs) is suggestive of a synergistic  mixture
+and MDR<1 (d50_DA < d50_obs) is suggestive of an antagonistic mixture
 }
 \description{
 computing Model Deviation Ratio for data obtained under three types of designs
