@@ -19,6 +19,6 @@ Load the package with:
 
 `library(MDR)`
 
-And explore its feature with:
+And explore its feature by taking a look at the vignette:
 
 `vignette('MDR')`
