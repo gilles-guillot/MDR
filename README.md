@@ -1,5 +1,5 @@
 # MDR
-The MDr package provides functions to test departure from Loewe additivity for binary toxicological or pharmacological mixtures with the Model Deviation Ratio (MDR) method.
+The MDR package provides functions to test departure from Loewe additivity for binary toxicological or pharmacological mixtures with the Model Deviation Ratio (MDR) method.
 It provides tools for computing the model deviation ratio (MDR) statistic and assessing the significance 
 of the observed departure from Loewe additivity. 
 
