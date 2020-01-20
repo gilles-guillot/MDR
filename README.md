@@ -7,13 +7,9 @@ It also provides tools for the analysis of single compound dose-response experim
 It is a companion package to the article “Dose-Response Analysis of Toxicological and Pharmacological Mixtures with the Model Deviation Ratio Method: Problems and
 Solutions” by Macacu, A., S. Lasagni, E. Carnesecchi, J.L Dorne, and G. Guillot (2020). 
 
-Requirement(s): 
+Windows users should first install Rtools: Rtools  https://cran.r-project.org/bin/windows/Rtools/
 
-R package devtools https://cran.r-project.org/web/packages/devtools/index.html
-
-For Windows users: Rtools  https://cran.r-project.org/bin/windows/Rtools/
-
-For installation under R: 
+For installation of the MDR package under R: 
 
 `if( ! 'devtools' %in% installed.packages() )
   { install.packages('devtools') }`
