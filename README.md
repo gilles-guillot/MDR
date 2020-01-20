@@ -16,7 +16,9 @@ For installation of the MDR package under R:
 `devtools::install_github('gilles-guillot/MDR', build_vignettes = TRUE)`
 
 Load the package with: 
+
 `library(MDR)`
 
 And explore its feature with:
+
 `vignette('MDR')`
